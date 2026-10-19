@@ -1,0 +1,15 @@
+# Only the website goes to this repository. Project files stay on disk.
+docs/
+output/
+.impeccable/
+PRODUCT.md
+DESIGN.md
+site/
+
+# Secrets: the webhook token. Upload config.php to the server by hand.
+config.php
+
+# System files
+Thumbs.db
+desktop.ini
+.DS_Store

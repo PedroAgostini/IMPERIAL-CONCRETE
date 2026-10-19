@@ -1,0 +1,104 @@
+# Imperial Concrete Coatings. Rules for Apache and LiteSpeed (Hostinger).
+# Live domain: https://imperialconcretecoatings.com/
+
+Options -Indexes
+AddDefaultCharset utf-8
+ServerSignature Off
+
+ErrorDocument 404 /404.html
+ErrorDocument 403 /404.html
+
+<IfModule mod_mime.c>
+  AddType application/manifest+json .webmanifest
+  AddType image/webp .webp
+  AddType image/svg+xml .svg
+  AddType font/woff2 .woff2
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # One address for the whole site: no www...
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteRule ^ https://imperialconcretecoatings.com%{REQUEST_URI} [L,R=301,NE]
+
+  # ...and always HTTPS.
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
+
+  # One address for the home page.
+  RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
+  RewriteRule ^index\.html$ / [L,R=301]
+
+  # Anti-spam: the form only accepts POST from a real browser on this site.
+  RewriteCond %{REQUEST_METHOD} POST
+  RewriteCond %{HTTP_USER_AGENT} ^-?$
+  RewriteRule ^contact\.php$ - [F]
+  RewriteCond %{REQUEST_METHOD} POST
+  RewriteCond %{HTTP_REFERER} !^https://imperialconcretecoatings\.com/ [NC]
+  RewriteRule ^contact\.php$ - [F]
+
+  # Block common exploit probes this static site has no reason to answer.
+  RewriteRule ^(wp-admin|wp-login\.php|wp-content|xmlrpc\.php|phpmyadmin|\.env) - [F,NC]
+
+  # Repository and settings files are not part of the site.
+  RewriteRule ^(README\.md|config(\.example)?\.php)$ - [F,NC]
+
+  # Hidden files stay private, except the .well-known folder.
+  RewriteRule "(^|/)\.(?!well-known/)" - [F]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+  Header always set Strict-Transport-Security "max-age=31536000" env=HTTPS
+  Header unset X-Powered-By
+
+  # Clean cache: pages and the form are always checked for a fresh copy,
+  # so a new upload shows up on the next visit without clearing anything.
+  <FilesMatch "\.(html|php)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+    Header set X-LiteSpeed-Cache-Control "no-cache"
+  </FilesMatch>
+  <FilesMatch "^(robots\.txt|sitemap\.xml|llms\.txt|humans\.txt|site\.webmanifest)$">
+    Header set Cache-Control "public, max-age=3600"
+  </FilesMatch>
+  # CSS and JS carry a ?v= stamp in the pages, so they can be cached for a year.
+  # Change the stamp in index.html, 404.html, privacy-policy.html and terms-of-use.html after editing them.
+  <FilesMatch "\.(css|js|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  # Images: a month. A replaced image should get a new file name.
+  <FilesMatch "\.(webp|png|jpe?g|svg|ico)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/xml application/javascript text/javascript application/json application/manifest+json image/svg+xml
+</IfModule>
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/css text/plain text/xml application/xml application/javascript text/javascript application/json application/manifest+json image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 hour"
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType image/x-icon "access plus 1 month"
+  ExpiresByType image/vnd.microsoft.icon "access plus 1 month"
+  ExpiresByType application/manifest+json "access plus 1 day"
+  ExpiresByType text/plain "access plus 1 hour"
+  ExpiresByType application/xml "access plus 1 hour"
+  ExpiresByType text/xml "access plus 1 hour"
+</IfModule>

@@ -1,0 +1,29 @@
+{
+  "name": "Imperial Concrete Coatings",
+  "short_name": "Imperial",
+  "description": "Epoxy and concrete coatings for garages, basements, patios and pool decks in the Kansas City metro.",
+  "lang": "en-US",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#060607",
+  "theme_color": "#060607",
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

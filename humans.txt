@@ -1,0 +1,17 @@
+/* TEAM */
+Developed by: Eu Sou TS
+Site: https://eusouts.com.br/
+
+/* CLIENT */
+Company: Imperial Concrete Coatings
+Location: Olathe, Kansas, United States
+Contact: imperialccoatings@gmail.com
+
+/* SITE */
+Last update: 2026/10/19
+Language: English
+Doctype: HTML5
+Standards: HTML5, CSS3, ECMAScript 2020
+Components: GSAP, ScrollTrigger
+Fonts: Red Hat Display, Red Hat Text
+Photography: Unsplash (sample images until real project photos arrive)
